@@ -1,0 +1,24 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天国际标准时间 0:00（北京时间早上 8:00）自动执行
+  workflow_dispatch: # 支持手动点击按钮触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          branch: main # 你的主分支名，通常是 main
+          persist-credentials: false
+
+      - name: Sync upstream changes
+        uses: aormsby/fork-sync-action@v3.4.3
+        with:
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_sync_branch: main
+          upstream_sync_repo: byJoey/cfnew # 原作者的仓库
